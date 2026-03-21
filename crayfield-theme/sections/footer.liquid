@@ -1,0 +1,214 @@
+<footer class="cr-footer" role="contentinfo">
+  <div class="cr-container">
+
+    <div class="cr-footer__top">
+
+      {%- comment -%} Brand column {%- endcomment -%}
+      <div class="cr-footer__brand">
+        {% if section.settings.logo %}
+          <img
+            src="{{ section.settings.logo | image_url: height: 50 }}"
+            alt="{{ shop.name }}"
+            height="50"
+            loading="lazy"
+          >
+        {% else %}
+          <p class="cr-footer__wordmark">{{ shop.name }}</p>
+        {% endif %}
+        <p class="cr-footer__tagline">{{ section.settings.tagline }}</p>
+        <div class="cr-trust-row cr-footer__trust">
+          <span class="cr-trust-item">Cleaned & sorted</span>
+          <span class="cr-trust-item">Sealed freshness</span>
+          <span class="cr-trust-item">Wholesale available</span>
+        </div>
+      </div>
+
+      {%- comment -%} Nav columns {%- endcomment -%}
+      {% for block in section.blocks %}
+        {% if block.type == 'link_list' %}
+          <div class="cr-footer__col" {{ block.shopify_attributes }}>
+            <h3 class="cr-footer__col-title">{{ block.settings.title }}</h3>
+            <ul role="list">
+              {% for link in block.settings.menu.links %}
+                <li><a href="{{ link.url }}" class="cr-footer__link">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {%- comment -%} Contact column {%- endcomment -%}
+      <div class="cr-footer__col">
+        <h3 class="cr-footer__col-title">Contact</h3>
+        <ul role="list" class="cr-footer__contact-list">
+          {% if section.settings.email != blank %}
+            <li>
+              <a href="mailto:{{ section.settings.email }}" class="cr-footer__link">{{ section.settings.email }}</a>
+            </li>
+          {% endif %}
+          {% if section.settings.phone != blank %}
+            <li>
+              <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="cr-footer__link">{{ section.settings.phone }}</a>
+            </li>
+          {% endif %}
+          {% if section.settings.whatsapp_number != blank %}
+            <li>
+              <a
+                href="https://wa.me/{{ section.settings.whatsapp_number }}"
+                class="cr-footer__link cr-footer__link--wa"
+                target="_blank"
+                rel="noopener"
+              >
+                WhatsApp
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="cr-footer__bottom">
+      <div class="cr-footer__legal">
+        <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+        {% if section.settings.company_number != blank %}
+          <p class="cr-footer__company">Company No. {{ section.settings.company_number }}</p>
+        {% endif %}
+      </div>
+
+      <div class="cr-footer__policy-links">
+        {% for link in section.settings.policy_menu.links %}
+          <a href="{{ link.url }}" class="cr-footer__policy-link">{{ link.title }}</a>
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_payment_icons %}
+        <div class="cr-footer__payments">
+          {% for type in shop.enabled_payment_types %}
+            {{ type | payment_type_svg_tag: class: 'cr-footer__pay-icon' }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</footer>
+
+{% stylesheet %}
+  .cr-footer {
+    background: var(--clr-text);
+    color: rgba(255,255,255,0.8);
+    padding-top: var(--sp-xl);
+    margin-top: var(--sp-xl);
+  }
+
+  .cr-footer__top {
+    display: grid;
+    gap: 2.5rem 2rem;
+    grid-template-columns: 1fr;
+    padding-bottom: var(--sp-lg);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+
+  @media (min-width: 600px)  { .cr-footer__top { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .cr-footer__top { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+
+  .cr-footer__wordmark {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--clr-white);
+    margin-bottom: 0.5rem;
+  }
+  .cr-footer__tagline {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1rem;
+    max-width: 30ch;
+  }
+
+  .cr-footer__trust .cr-trust-item { color: rgba(255,255,255,0.6); }
+  .cr-footer__trust .cr-trust-item::before { color: var(--clr-brand); }
+
+  .cr-footer__col h3,
+  .cr-footer__col-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-white);
+    margin-bottom: 1rem;
+  }
+  .cr-footer__col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .cr-footer__link {
+    text-decoration: none;
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.65);
+    transition: color 0.15s;
+  }
+  .cr-footer__link:hover { color: var(--clr-white); }
+  .cr-footer__link--wa { color: #25D366; }
+  .cr-footer__link--wa:hover { color: #1ebe5d; }
+
+  .cr-footer__contact-list { gap: 0.5rem !important; }
+
+  /* Bottom bar */
+  .cr-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    padding-block: 1.5rem;
+  }
+
+  .cr-footer__legal p { font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+  .cr-footer__company { font-size: 0.75rem !important; margin-top: 0.2rem; }
+
+  .cr-footer__policy-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+  .cr-footer__policy-link {
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    transition: color 0.15s;
+  }
+  .cr-footer__policy-link:hover { color: var(--clr-white); }
+
+  .cr-footer__payments { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+  .cr-footer__pay-icon { height: 1.4rem; border-radius: 3px; filter: grayscale(1) brightness(1.5); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.footer",
+  "settings": [
+    { "type": "image_picker", "id": "logo",            "label": "Logo image" },
+    { "type": "text",         "id": "tagline",         "label": "Tagline",         "default": "Premium Nigerian crayfish. Cleaned. Sealed. Delivered UK‑wide." },
+    { "type": "text",         "id": "email",           "label": "Email address",   "default": "hello@crayfield.co.uk" },
+    { "type": "text",         "id": "phone",           "label": "Phone number" },
+    { "type": "text",         "id": "whatsapp_number", "label": "WhatsApp number (digits only)", "default": "447000000000" },
+    { "type": "text",         "id": "company_number",  "label": "Company number" },
+    { "type": "link_list",    "id": "policy_menu",     "label": "Policy links menu" },
+    { "type": "checkbox",     "id": "show_payment_icons", "label": "t:labels.show_payment_icons", "default": true }
+  ],
+  "blocks": [
+    {
+      "name": "Link list",
+      "type": "link_list",
+      "settings": [
+        { "type": "text",      "id": "title", "label": "Column title", "default": "Shop" },
+        { "type": "link_list", "id": "menu",  "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.footer",
+      "blocks": [
+        { "type": "link_list", "settings": { "title": "Shop" } },
+        { "type": "link_list", "settings": { "title": "Wholesale" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
