@@ -1,0 +1,272 @@
+<header class="cr-header" role="banner">
+  <div class="cr-container cr-header__inner">
+
+    {%- comment -%} Mobile hamburger {%- endcomment -%}
+    <button
+      class="cr-header__burger"
+      aria-expanded="false"
+      aria-controls="cr-mobile-nav"
+      aria-label="Open navigation menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    {%- comment -%} Logo / brand {%- endcomment -%}
+    <a href="{{ routes.root_url }}" class="cr-header__logo" aria-label="{{ shop.name }} home">
+      {% if section.settings.logo %}
+        <img
+          src="{{ section.settings.logo | image_url: height: 60 }}"
+          alt="{{ shop.name }}"
+          height="60"
+          loading="eager"
+        >
+      {% else %}
+        <span class="cr-header__wordmark">{{ shop.name }}</span>
+      {% endif %}
+    </a>
+
+    {%- comment -%} Desktop nav {%- endcomment -%}
+    <nav class="cr-header__nav" aria-label="Main navigation">
+      {% for link in section.settings.menu.links %}
+        {% if link.links != blank %}
+          <div class="cr-header__dropdown">
+            <button class="cr-header__nav-link cr-header__nav-link--parent" aria-expanded="false">
+              {{ link.title }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="cr-header__submenu" role="list">
+              {% for child in link.links %}
+                <li><a href="{{ child.url }}" class="cr-header__submenu-link" {% if child.current %}aria-current="page"{% endif %}>{{ child.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% else %}
+          <a href="{{ link.url }}" class="cr-header__nav-link" {% if link.current %}aria-current="page"{% endif %}>{{ link.title }}</a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    {%- comment -%} Header icons {%- endcomment -%}
+    <div class="cr-header__icons">
+      {% if section.settings.show_search %}
+        <a href="{{ routes.search_url }}" class="cr-header__icon-btn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </a>
+      {% endif %}
+      {% if shop.customer_accounts_enabled %}
+        <shopify-account menu="{{ section.settings.customer_account_menu }}" class="cr-header__icon-btn" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </shopify-account>
+      {% endif %}
+      <a href="{{ routes.cart_url }}" class="cr-header__icon-btn cr-header__cart" aria-label="Cart ({{ cart.item_count }} items)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        {% if cart.item_count > 0 %}
+          <span class="cr-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+        {% endif %}
+      </a>
+    </div>
+
+  </div>
+
+  {%- comment -%} Mobile nav drawer {%- endcomment -%}
+  <nav id="cr-mobile-nav" class="cr-mobile-nav" aria-label="Mobile navigation" hidden>
+    <ul role="list">
+      {% for link in section.settings.menu.links %}
+        <li>
+          <a href="{{ link.url }}" class="cr-mobile-nav__link" {% if link.current %}aria-current="page"{% endif %}>
+            {{ link.title }}
+          </a>
+          {% if link.links != blank %}
+            <ul role="list" class="cr-mobile-nav__sub">
+              {% for child in link.links %}
+                <li><a href="{{ child.url }}" class="cr-mobile-nav__sub-link">{{ child.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  (function () {
+    const burger = document.querySelector('.cr-header__burger');
+    const nav    = document.getElementById('cr-mobile-nav');
+    if (!burger || !nav) return;
+    burger.addEventListener('click', function () {
+      const open = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!open));
+      nav.hidden = open;
+      burger.classList.toggle('is-open', !open);
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .cr-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--clr-white);
+    border-bottom: 1px solid var(--clr-border);
+    box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  }
+
+  .cr-header__inner {
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Logo */
+  .cr-header__logo { flex-shrink: 0; text-decoration: none; }
+  .cr-header__wordmark {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--clr-brand);
+    letter-spacing: -0.03em;
+  }
+
+  /* Desktop nav */
+  .cr-header__nav {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+  .cr-header__nav-link {
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--clr-text);
+    border-radius: var(--radius-sm);
+    transition: color 0.15s, background 0.15s;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .cr-header__nav-link:hover,
+  .cr-header__nav-link[aria-current="page"] { color: var(--clr-brand); background: var(--clr-brand-light); }
+
+  /* Dropdown */
+  .cr-header__dropdown { position: relative; }
+  .cr-header__submenu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 180px;
+    background: var(--clr-white);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    list-style: none;
+    padding: 0.5rem 0;
+    z-index: 200;
+  }
+  .cr-header__dropdown:hover .cr-header__submenu,
+  .cr-header__nav-link--parent[aria-expanded="true"] + .cr-header__submenu { display: block; }
+  .cr-header__submenu-link {
+    display: block;
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    font-size: 0.875rem;
+    color: var(--clr-text);
+  }
+  .cr-header__submenu-link:hover { color: var(--clr-brand); background: var(--clr-brand-light); }
+
+  /* Icons */
+  .cr-header__icons { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+  .cr-header__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem; height: 2.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--clr-text);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.15s, background 0.15s;
+  }
+  .cr-header__icon-btn:hover { color: var(--clr-brand); background: var(--clr-brand-light); }
+  .cr-header__cart-count {
+    position: absolute;
+    top: 0.1rem; right: 0.1rem;
+    background: var(--clr-brand);
+    color: var(--clr-white);
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 1.1rem; height: 1.1rem;
+    border-radius: var(--radius-pill);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Hamburger */
+  .cr-header__burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 2.25rem; height: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .cr-header__burger span {
+    display: block;
+    height: 2px;
+    background: var(--clr-text);
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .cr-header__burger.is-open span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+  .cr-header__burger.is-open span:nth-child(2) { opacity: 0; }
+  .cr-header__burger.is-open span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+  /* Mobile nav */
+  .cr-mobile-nav {
+    border-top: 1px solid var(--clr-border);
+    background: var(--clr-white);
+    padding: 1rem 0;
+  }
+  .cr-mobile-nav ul { list-style: none; padding: 0; margin: 0; }
+  .cr-mobile-nav__link,
+  .cr-mobile-nav__sub-link {
+    display: block;
+    padding: 0.75rem var(--page-gutter);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--clr-text);
+    transition: color 0.15s;
+  }
+  .cr-mobile-nav__link:hover,
+  .cr-mobile-nav__sub-link:hover { color: var(--clr-brand); }
+  .cr-mobile-nav__sub { padding-left: 1.5rem; }
+  .cr-mobile-nav__sub-link { font-weight: 400; font-size: 0.9rem; padding-block: 0.5rem; }
+
+  @media (min-width: 900px) {
+    .cr-header__burger  { display: none; }
+    .cr-header__nav     { display: flex; }
+    .cr-header__icons   { margin-left: 1rem; }
+    .cr-mobile-nav      { display: none !important; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.header",
+  "settings": [
+    { "type": "image_picker", "id": "logo",                  "label": "Logo image" },
+    { "type": "link_list",    "id": "menu",                  "label": "t:labels.menu" },
+    { "type": "checkbox",     "id": "show_search",           "label": "Show search icon", "default": true },
+    { "type": "link_list",    "id": "customer_account_menu", "label": "t:labels.customer_account_menu", "default": "customer-account-main-menu" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,130 @@
+{% comment %} ── Crayfield How It Works Section ── {% endcomment %}
+
+<section class="cr-section cr-hiw" aria-label="How it works">
+  <div class="cr-container">
+
+    <div class="cr-hiw__header">
+      <p class="cr-section__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="cr-section__title">{{ section.settings.title }}</h2>
+    </div>
+
+    <ol class="cr-hiw__steps" role="list">
+      {% for block in section.blocks %}
+        {% if block.type == 'step' %}
+          <li class="cr-hiw__step" {{ block.shopify_attributes }}>
+            <div class="cr-hiw__step-number" aria-hidden="true">{{ forloop.index }}</div>
+            <div class="cr-hiw__step-icon" aria-hidden="true">{{ block.settings.icon_emoji }}</div>
+            <h3 class="cr-hiw__step-title">{{ block.settings.title }}</h3>
+            <p class="cr-hiw__step-text">{{ block.settings.text }}</p>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+
+    {% if section.settings.cta_label != blank %}
+      <div class="cr-hiw__cta">
+        <a href="{{ section.settings.cta_url }}" class="cr-btn cr-btn--primary">{{ section.settings.cta_label }}</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .cr-hiw { background: var(--clr-brand-light); }
+  .cr-hiw__header { text-align: center; margin-bottom: 3rem; }
+
+  .cr-hiw__steps {
+    display: grid;
+    gap: 2rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: steps;
+    position: relative;
+  }
+
+  @media (min-width: 640px) {
+    .cr-hiw__steps { grid-template-columns: repeat(3, 1fr); }
+
+    /* connector line */
+    .cr-hiw__steps::before {
+      content: '';
+      position: absolute;
+      top: 2.25rem;
+      left: calc(16.666% + 1rem);
+      right: calc(16.666% + 1rem);
+      height: 2px;
+      background: var(--clr-brand-muted);
+      z-index: 0;
+    }
+  }
+
+  .cr-hiw__step {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    background: var(--clr-white);
+    border-radius: var(--radius-md);
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .cr-hiw__step-number {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--clr-brand);
+    color: var(--clr-white);
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+
+  .cr-hiw__step-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+  .cr-hiw__step-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .cr-hiw__step-text { font-size: 0.9rem; color: var(--clr-text-muted); }
+
+  .cr-hiw__cta { text-align: center; margin-top: 3rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "How It Works",
+  "settings": [
+    { "type": "text", "id": "eyebrow",   "label": "Eyebrow", "default": "Simple Process" },
+    { "type": "text", "id": "title",     "label": "Title",   "default": "Order in 3 Easy Steps" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Shop now" },
+    { "type": "url",  "id": "cta_url",   "label": "CTA URL" }
+  ],
+  "blocks": [
+    {
+      "name": "Step",
+      "type": "step",
+      "settings": [
+        { "type": "text", "id": "icon_emoji", "label": "Icon (emoji)", "default": "🛒" },
+        { "type": "text", "id": "title",      "label": "Step title",   "default": "Choose your pack" },
+        { "type": "text", "id": "text",       "label": "Step text",    "default": "Browse our range and select your size — 50g up to bulk wholesale cases." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "How It Works",
+      "blocks": [
+        { "type": "step", "settings": { "icon_emoji": "🛒", "title": "Choose Your Pack",  "text": "Browse our range and select your size — 50g up to bulk wholesale cases." } },
+        { "type": "step", "settings": { "icon_emoji": "📦", "title": "We Pack & Seal",    "text": "Your order is freshness-checked, sealed, and labelled with batch and best-before." } },
+        { "type": "step", "settings": { "icon_emoji": "🚚", "title": "Fast UK Delivery",  "text": "Dispatched same or next working day. Tracked to your door, UK-wide." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
