@@ -1,0 +1,115 @@
+{% comment %} ── Crayfield Testimonials / Reviews Section ── {% endcomment %}
+
+<section class="cr-section cr-testimonials" aria-label="Customer reviews">
+  <div class="cr-container">
+
+    <div class="cr-testimonials__header">
+      <p class="cr-section__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="cr-section__title">{{ section.settings.title }}</h2>
+      {% if section.settings.aggregate_rating != blank %}
+        <div class="cr-testimonials__aggregate">
+          <span class="cr-stars">★★★★★</span>
+          <span class="cr-testimonials__agg-text">{{ section.settings.aggregate_rating }} from {{ section.settings.review_count }} reviews</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <ul class="cr-testimonials__grid cr-grid-3" role="list">
+      {% for block in section.blocks %}
+        {% if block.type == 'review' %}
+          <li class="cr-card cr-review" {{ block.shopify_attributes }}>
+            <div class="cr-card__body">
+              <div class="cr-review__stars cr-stars" aria-label="{{ block.settings.stars }} out of 5 stars">
+                {% for i in (1..block.settings.stars) %}★{% endfor %}{% assign remaining = 5 | minus: block.settings.stars %}{% for i in (1..remaining) %}☆{% endfor %}
+              </div>
+              <blockquote class="cr-review__quote">"{{ block.settings.quote }}"</blockquote>
+              <footer class="cr-review__footer">
+                <strong class="cr-review__name">{{ block.settings.name }}</strong>
+                {% if block.settings.role != blank %}
+                  <span class="cr-review__role">{{ block.settings.role }}</span>
+                {% endif %}
+              </footer>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    {% if section.settings.reviews_platform_url != blank %}
+      <div class="cr-testimonials__cta">
+        <a href="{{ section.settings.reviews_platform_url }}" class="cr-btn cr-btn--outline" target="_blank" rel="noopener">
+          Read all reviews
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .cr-testimonials__header { text-align: center; margin-bottom: 2.5rem; }
+
+  .cr-testimonials__aggregate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .cr-testimonials__agg-text { font-size: 0.9rem; color: var(--clr-text-muted); }
+
+  .cr-testimonials__grid { list-style: none; padding: 0; margin: 0; }
+
+  .cr-review { border-top: 3px solid var(--clr-brand); }
+
+  .cr-review__stars { font-size: 1.2rem; margin-bottom: 0.75rem; }
+
+  .cr-review__quote {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--clr-text);
+    font-style: italic;
+    margin: 0 0 1.25rem;
+  }
+
+  .cr-review__footer { display: flex; flex-direction: column; gap: 0.1rem; }
+  .cr-review__name { font-size: 0.9rem; font-weight: 700; }
+  .cr-review__role { font-size: 0.8rem; color: var(--clr-text-muted); }
+
+  .cr-testimonials__cta { text-align: center; margin-top: 2.5rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "text", "id": "eyebrow",              "label": "Eyebrow",               "default": "Reviews" },
+    { "type": "text", "id": "title",                "label": "Title",                 "default": "What Our Customers Say" },
+    { "type": "text", "id": "aggregate_rating",     "label": "Aggregate rating",      "default": "4.9 / 5.0" },
+    { "type": "text", "id": "review_count",         "label": "Number of reviews",     "default": "120+" },
+    { "type": "url",  "id": "reviews_platform_url", "label": "Reviews platform URL"  }
+  ],
+  "blocks": [
+    {
+      "name": "Review",
+      "type": "review",
+      "settings": [
+        { "type": "range",  "id": "stars", "label": "Stars", "min": 1, "max": 5, "default": 5 },
+        { "type": "text",   "id": "quote", "label": "Review quote", "default": "Freshest crayfish I have ever ordered online. Properly cleaned, sealed well and arrived fast." },
+        { "type": "text",   "id": "name",  "label": "Reviewer name", "default": "Amaka O." },
+        { "type": "text",   "id": "role",  "label": "Reviewer role / location (optional)", "default": "London" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "review", "settings": { "stars": 5, "quote": "Freshest crayfish I have ever ordered online. Properly cleaned, sealed well and arrived fast.", "name": "Amaka O.", "role": "London" } },
+        { "type": "review", "settings": { "stars": 5, "quote": "We stock Crayfield in our shop and customers keep coming back. Consistent quality every time.", "name": "Tunde A.", "role": "Shop owner, Birmingham" } },
+        { "type": "review", "settings": { "stars": 5, "quote": "The ground crayfish is incredible — you can smell the freshness through the packaging. Will never go back to supermarket brands.", "name": "Ngozi K.", "role": "Manchester" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
