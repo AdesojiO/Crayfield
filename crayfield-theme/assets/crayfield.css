@@ -1,0 +1,202 @@
+/* ============================================================
+   CRAYFIELD GLOBAL — Brand Design Tokens & Utilities
+   ============================================================ */
+
+:root {
+  /* Brand colours */
+  --clr-brand:       #C0622A;   /* terracotta primary */
+  --clr-brand-dark:  #8B4513;   /* hover / dark */
+  --clr-brand-light: #F5E6D3;   /* warm cream bg */
+  --clr-brand-muted: #EDD9C0;   /* subtle tint */
+
+  /* Neutrals */
+  --clr-text:        #1A1A1A;
+  --clr-text-muted:  #5C5C5C;
+  --clr-border:      #E8E0D5;
+  --clr-white:       #FFFFFF;
+  --clr-bg-alt:      #FAF7F4;   /* off-white section bg */
+
+  /* Spacing scale */
+  --sp-xs:  0.5rem;
+  --sp-sm:  1rem;
+  --sp-md:  1.5rem;
+  --sp-lg:  2.5rem;
+  --sp-xl:  4rem;
+  --sp-2xl: 6rem;
+
+  /* Typography */
+  --font-body:    var(--font-body-family, system-ui, sans-serif);
+  --font-heading: var(--font-heading-family, system-ui, sans-serif);
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(0,0,0,.08);
+  --shadow-btn:  0 4px 14px rgba(192,98,42,.30);
+
+  /* Layout */
+  --page-max:    1200px;
+  --page-gutter: clamp(1rem, 4vw, 2rem);
+}
+
+/* ---- Global resets ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--clr-text);
+  background: var(--clr-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+/* ---- Layout wrapper ---- */
+.cr-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* ---- Buttons ---- */
+.cr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  min-height: 52px; /* thumb-friendly */
+  white-space: nowrap;
+}
+.cr-btn:active { transform: scale(0.97); }
+
+.cr-btn--primary {
+  background: var(--clr-brand);
+  color: var(--clr-white);
+  box-shadow: var(--shadow-btn);
+}
+.cr-btn--primary:hover { background: var(--clr-brand-dark); }
+
+.cr-btn--outline {
+  background: transparent;
+  color: var(--clr-brand);
+  border-color: var(--clr-brand);
+}
+.cr-btn--outline:hover {
+  background: var(--clr-brand-light);
+}
+
+.cr-btn--whatsapp {
+  background: #25D366;
+  color: var(--clr-white);
+}
+.cr-btn--whatsapp:hover { background: #1ebe5d; }
+
+/* ---- Section helpers ---- */
+.cr-section { padding-block: var(--sp-xl); }
+.cr-section--alt { background: var(--clr-bg-alt); }
+.cr-section--brand { background: var(--clr-brand); color: var(--clr-white); }
+.cr-section--cream { background: var(--clr-brand-light); }
+
+.cr-section__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-brand);
+  margin-bottom: var(--sp-xs);
+}
+.cr-section__title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--sp-sm);
+}
+.cr-section__subtitle {
+  font-size: 1.05rem;
+  color: var(--clr-text-muted);
+  max-width: 52ch;
+}
+
+/* ---- Grid helpers ---- */
+.cr-grid-2 { display: grid; gap: var(--sp-md); }
+.cr-grid-3 { display: grid; gap: var(--sp-md); }
+.cr-grid-4 { display: grid; gap: var(--sp-md); }
+
+@media (min-width: 640px) {
+  .cr-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .cr-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+  .cr-grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---- Cards ---- */
+.cr-card {
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.cr-card__body { padding: var(--sp-md); }
+
+/* ---- Trust badge row ---- */
+.cr-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-xs) var(--sp-md);
+  align-items: center;
+}
+.cr-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+}
+.cr-trust-item::before {
+  content: "✓";
+  color: var(--clr-brand);
+  font-weight: 800;
+}
+
+/* ---- Sticky WhatsApp button (mobile) ---- */
+.cr-wa-sticky {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 900;
+  background: #25D366;
+  color: var(--clr-white);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  transition: transform 0.2s;
+}
+.cr-wa-sticky:hover { transform: scale(1.05); }
+.cr-wa-sticky svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
+
+@media (min-width: 900px) { .cr-wa-sticky { display: none; } }
+
+/* ---- Star rating ---- */
+.cr-stars { color: #F5A623; letter-spacing: 0.05em; font-size: 1.1rem; }
