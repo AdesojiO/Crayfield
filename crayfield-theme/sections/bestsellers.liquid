@@ -1,0 +1,173 @@
+{% comment %} ── Crayfield Bestsellers Section ── {% endcomment %}
+
+<section class="cr-section cr-bestsellers" aria-label="Bestsellers">
+  <div class="cr-container">
+
+    <div class="cr-bestsellers__header">
+      <p class="cr-section__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="cr-section__title">{{ section.settings.title }}</h2>
+    </div>
+
+    {% assign collection = collections[section.settings.collection] %}
+    {% if collection != blank and collection.products.size > 0 %}
+      <ul class="cr-bestsellers__grid cr-grid-{% if section.settings.columns == '3' %}3{% else %}4{% endif %}" role="list">
+        {% for product in collection.products limit: section.settings.product_limit %}
+          <li class="cr-card cr-product-card">
+            <a href="{{ product.url }}" class="cr-product-card__link" aria-label="{{ product.title }}">
+              {% if product.featured_image %}
+                <div class="cr-product-card__image-wrap">
+                  <img
+                    src="{{ product.featured_image | image_url: width: 600 }}"
+                    srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                            {{ product.featured_image | image_url: width: 600 }} 600w"
+                    sizes="(min-width: 900px) 25vw, (min-width: 640px) 33vw, 80vw"
+                    alt="{{ product.featured_image.alt | default: product.title }}"
+                    width="600"
+                    height="{{ 600 | divided_by: product.featured_image.aspect_ratio | round }}"
+                    loading="lazy"
+                  >
+                  {% unless product.available %}
+                    <span class="cr-product-card__badge cr-product-card__badge--oos">Sold out</span>
+                  {% endunless %}
+                </div>
+              {% else %}
+                <div class="cr-product-card__image-placeholder" aria-hidden="true"></div>
+              {% endif %}
+
+              <div class="cr-card__body">
+                <p class="cr-product-card__vendor">{{ product.vendor }}</p>
+                <h3 class="cr-product-card__title">{{ product.title }}</h3>
+                <p class="cr-product-card__price">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="cr-product-card__price--sale">{{ product.price | money }}</span>
+                    <s class="cr-product-card__price--compare">{{ product.compare_at_price | money }}</s>
+                  {% else %}
+                    {{ product.price | money }}
+                  {% endif %}
+                </p>
+              </div>
+            </a>
+
+            <div class="cr-product-card__footer">
+              {% form 'product', product %}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                {% if product.variants.size > 1 %}
+                  <a href="{{ product.url }}" class="cr-btn cr-btn--outline cr-product-card__cta">Choose options</a>
+                {% else %}
+                  <button
+                    type="submit"
+                    class="cr-btn cr-btn--primary cr-product-card__cta"
+                    {% unless product.available %}disabled{% endunless %}
+                    aria-label="Add {{ product.title }} to cart"
+                  >
+                    {% if product.available %}Add to cart{% else %}Sold out{% endif %}
+                  </button>
+                {% endif %}
+              {% endform %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="cr-bestsellers__empty">Assign a collection in the theme editor to display products here.</p>
+    {% endif %}
+
+    {% if section.settings.view_all_url != blank %}
+      <div class="cr-bestsellers__view-all">
+        <a href="{{ section.settings.view_all_url }}" class="cr-btn cr-btn--outline">View all products</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .cr-bestsellers__header { text-align: center; margin-bottom: 2.5rem; }
+
+  .cr-bestsellers__grid { list-style: none; padding: 0; margin: 0; }
+
+  .cr-product-card { display: flex; flex-direction: column; }
+
+  .cr-product-card__link {
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+  }
+
+  .cr-product-card__image-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--clr-brand-light);
+  }
+  .cr-product-card__image-wrap img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .cr-product-card__link:hover .cr-product-card__image-wrap img { transform: scale(1.04); }
+
+  .cr-product-card__image-placeholder {
+    background: var(--clr-brand-muted);
+    aspect-ratio: 1/1;
+  }
+
+  .cr-product-card__badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: var(--clr-text-muted);
+    color: var(--clr-white);
+  }
+
+  .cr-product-card__vendor {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--clr-text-muted);
+    margin-bottom: 0.2rem;
+  }
+  .cr-product-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .cr-product-card__price { font-weight: 700; color: var(--clr-brand); }
+  .cr-product-card__price--sale { color: var(--clr-brand); margin-right: 0.4rem; }
+  .cr-product-card__price--compare { color: var(--clr-text-muted); font-weight: 400; }
+
+  .cr-product-card__footer { padding: 0 var(--sp-md) var(--sp-md); }
+  .cr-product-card__cta { width: 100%; }
+
+  .cr-bestsellers__view-all {
+    text-align: center;
+    margin-top: 2.5rem;
+  }
+
+  .cr-bestsellers__empty {
+    text-align: center;
+    color: var(--clr-text-muted);
+    padding: 3rem;
+    border: 2px dashed var(--clr-border);
+    border-radius: var(--radius-md);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Bestsellers",
+  "settings": [
+    { "type": "text",       "id": "eyebrow",       "label": "Eyebrow",        "default": "Shop" },
+    { "type": "text",       "id": "title",          "label": "Title",          "default": "Our Bestsellers" },
+    { "type": "collection", "id": "collection",     "label": "Collection" },
+    { "type": "range",      "id": "product_limit",  "label": "Number of products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "select",     "id": "columns",        "label": "Columns (desktop)", "options": [{"value":"3","label":"3"},{"value":"4","label":"4"}], "default": "4" },
+    { "type": "url",        "id": "view_all_url",   "label": "\"View all\" URL" }
+  ],
+  "presets": [{ "name": "Bestsellers" }]
+}
+{% endschema %}
