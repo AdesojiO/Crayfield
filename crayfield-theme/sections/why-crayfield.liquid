@@ -1,0 +1,95 @@
+{% comment %} ── Crayfield Why Crayfield / Quality Promise Section ── {% endcomment %}
+
+<section class="cr-section cr-section--alt cr-why" aria-label="Why Crayfield">
+  <div class="cr-container">
+
+    <div class="cr-why__header">
+      <p class="cr-section__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="cr-section__title">{{ section.settings.title }}</h2>
+      <p class="cr-section__subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <ul class="cr-why__pillars cr-grid-4" role="list">
+      {% for block in section.blocks %}
+        {% if block.type == 'pillar' %}
+          <li class="cr-why__pillar" {{ block.shopify_attributes }}>
+            <div class="cr-why__icon" aria-hidden="true">{{ block.settings.icon_emoji }}</div>
+            <h3 class="cr-why__pillar-title">{{ block.settings.title }}</h3>
+            <p class="cr-why__pillar-text">{{ block.settings.text }}</p>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .cr-why__header { text-align: center; margin-bottom: 3rem; }
+
+  .cr-why__pillars { list-style: none; padding: 0; margin: 0; }
+
+  @media (min-width: 480px) {
+    .cr-why__pillars { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .cr-why__pillars { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .cr-why__pillar {
+    background: var(--clr-white);
+    border-radius: var(--radius-md);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s;
+  }
+  .cr-why__pillar:hover { transform: translateY(-4px); }
+
+  .cr-why__icon { font-size: 2.5rem; margin-bottom: 1rem; line-height: 1; }
+
+  .cr-why__pillar-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--clr-text);
+  }
+  .cr-why__pillar-text {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Why Crayfield",
+  "settings": [
+    { "type": "text", "id": "eyebrow",  "label": "Eyebrow", "default": "Quality Promise" },
+    { "type": "text", "id": "title",    "label": "Title",   "default": "Why Choose Crayfield?" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle","default": "Every pack meets our strict quality standard before it leaves our hands." }
+  ],
+  "blocks": [
+    {
+      "name": "Quality Pillar",
+      "type": "pillar",
+      "settings": [
+        { "type": "text", "id": "icon_emoji", "label": "Icon (emoji)",   "default": "✋" },
+        { "type": "text", "id": "title",      "label": "Pillar title",   "default": "Hand-Cleaned" },
+        { "type": "text", "id": "text",       "label": "Pillar text",    "default": "Each batch is hand-sorted to remove shells, sand, and debris before packing." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Crayfield",
+      "blocks": [
+        { "type": "pillar", "settings": { "icon_emoji": "✋", "title": "Hand-Cleaned",   "text": "Each batch is hand-sorted to remove shells, sand, and debris before packing." } },
+        { "type": "pillar", "settings": { "icon_emoji": "🔒", "title": "Sealed Fresh",   "text": "Hermetically sealed packaging locks in aroma and freshness from source." } },
+        { "type": "pillar", "settings": { "icon_emoji": "📦", "title": "Batch-Traced",   "text": "Every pack carries a batch ID and best-before date for full traceability." } },
+        { "type": "pillar", "settings": { "icon_emoji": "🚚", "title": "Fast Delivery",  "text": "UK-wide dispatch — most orders shipped within 24 hours of purchase." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

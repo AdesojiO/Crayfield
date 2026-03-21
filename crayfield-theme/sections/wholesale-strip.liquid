@@ -1,0 +1,162 @@
+{% comment %} ── Crayfield Wholesale Strip (B2B CTA) Section ── {% endcomment %}
+
+<section class="cr-section cr-ws" aria-label="Wholesale">
+  <div class="cr-container cr-ws__inner">
+
+    <div class="cr-ws__content">
+      <p class="cr-ws__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="cr-ws__title">{{ section.settings.title }}</h2>
+      <p class="cr-ws__subtitle">{{ section.settings.subtitle }}</p>
+
+      <ul class="cr-ws__who" role="list">
+        {% for block in section.blocks %}
+          {% if block.type == 'buyer_type' %}
+            <li {{ block.shopify_attributes }}>{{ block.settings.label }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <div class="cr-ws__ctas">
+        <a href="{{ section.settings.enquiry_url }}" class="cr-btn cr-btn--outline cr-btn--outline-white">
+          {{ section.settings.enquiry_label }}
+        </a>
+        <a
+          href="https://wa.me/{{ section.settings.whatsapp_number }}?text={{ section.settings.whatsapp_prefill | url_encode }}"
+          class="cr-btn cr-btn--whatsapp"
+          target="_blank"
+          rel="noopener"
+          aria-label="Chat on WhatsApp"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          {{ section.settings.whatsapp_label }}
+        </a>
+      </div>
+    </div>
+
+    {% if section.settings.image %}
+      <div class="cr-ws__image" aria-hidden="true">
+        <img
+          src="{{ section.settings.image | image_url: width: 800 }}"
+          alt="{{ section.settings.image.alt | default: 'Crayfield wholesale supply' }}"
+          width="800"
+          height="{{ 800 | divided_by: section.settings.image.aspect_ratio | round }}"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .cr-ws {
+    background: var(--clr-text);
+    color: var(--clr-white);
+    overflow: hidden;
+  }
+
+  .cr-ws__inner {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .cr-ws__inner { grid-template-columns: 1fr 1fr; }
+  }
+
+  .cr-ws__eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--clr-brand-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .cr-ws__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+
+  .cr-ws__subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 46ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .cr-ws__who {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+  .cr-ws__who li {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius-pill);
+    color: var(--clr-white);
+  }
+
+  .cr-ws__ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+  .cr-btn--outline-white {
+    color: var(--clr-white);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .cr-btn--outline-white:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .cr-ws__image img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    aspect-ratio: 4/3;
+    opacity: 0.85;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wholesale Strip",
+  "settings": [
+    { "type": "text",        "id": "eyebrow",          "label": "Eyebrow",              "default": "Trade & Wholesale" },
+    { "type": "text",        "id": "title",             "label": "Title",                "default": "Supply Your Shop, Restaurant, or Catering Business" },
+    { "type": "text",        "id": "subtitle",          "label": "Subtitle",             "default": "Competitive case prices, fast turnaround, and consistent quality. Trusted by African grocers and restaurants across the UK." },
+    { "type": "text",        "id": "enquiry_label",     "label": "Enquiry CTA label",    "default": "Request price list" },
+    { "type": "url",         "id": "enquiry_url",       "label": "Enquiry page URL" },
+    { "type": "text",        "id": "whatsapp_label",    "label": "WhatsApp CTA label",   "default": "WhatsApp us" },
+    { "type": "text",        "id": "whatsapp_number",   "label": "WhatsApp number (digits only, incl. country code)", "default": "447000000000" },
+    { "type": "text",        "id": "whatsapp_prefill",  "label": "WhatsApp pre-filled message", "default": "Hi Crayfield, I'd like to enquire about wholesale pricing." },
+    { "type": "image_picker","id": "image",             "label": "Right-hand image (optional)" }
+  ],
+  "blocks": [
+    {
+      "name": "Buyer type",
+      "type": "buyer_type",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "African grocery shops" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Strip",
+      "blocks": [
+        { "type": "buyer_type", "settings": { "label": "African grocery shops" } },
+        { "type": "buyer_type", "settings": { "label": "Restaurants & suya spots" } },
+        { "type": "buyer_type", "settings": { "label": "Caterers & event chefs" } },
+        { "type": "buyer_type", "settings": { "label": "Market traders" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
