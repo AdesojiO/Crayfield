@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { @apply font-sans text-gray-900 bg-white antialiased; }
+  img  { display: block; max-width: 100%; }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill font-semibold text-base
+           min-h-[52px] whitespace-nowrap transition-all duration-150 cursor-pointer border-2 border-transparent;
+  }
+  .btn:active { @apply scale-95; }
+  .btn-primary {
+    @apply btn bg-brand text-white shadow-btn border-brand;
+  }
+  .btn-primary:hover { @apply bg-brand-dark border-brand-dark; }
+  .btn-outline {
+    @apply btn bg-transparent text-brand border-brand;
+  }
+  .btn-outline:hover { @apply bg-brand-light; }
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white border-[#25D366];
+  }
+  .btn-whatsapp:hover { @apply bg-[#1ebe5d]; }
+  .btn-dark-outline {
+    @apply btn bg-transparent text-white border-white/50;
+  }
+  .btn-dark-outline:hover { @apply bg-white/10; }
+
+  .section-eyebrow {
+    @apply text-xs font-bold tracking-widest uppercase text-brand mb-1;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-extrabold leading-tight tracking-tight;
+  }
+  .section-subtitle {
+    @apply text-base text-neutral-muted max-w-prose;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-card overflow-hidden;
+  }
+
+  .trust-item {
+    @apply flex items-center gap-1.5 text-sm font-semibold text-neutral-muted;
+  }
+  .trust-item::before {
+    content: "✓";
+    @apply text-brand font-black;
+  }
+
+  .page-container {
+    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
