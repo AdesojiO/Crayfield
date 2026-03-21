@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(npm --version)",
+      "Bash(pip --version)",
+      "Bash(pip3 --version)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:unsplash.com)",
+      "WebSearch",
+      "WebFetch(domain:images.unsplash.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(python3:*)",
+      "Bash(node:*)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Eba_and_Egusi_soup.JPG/800px-Eba_and_Egusi_soup.JPG\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/JOLLOF_RICE_WITH_CHICKEN.jpg/800px-JOLLOF_RICE_WITH_CHICKEN.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Ogbono_soup.jpg/800px-Ogbono_soup.jpg\")"
+    ]
+  }
+}
