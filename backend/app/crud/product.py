@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
+from sqlalchemy.exc import IntegrityError
+from fastapi import HTTPException
 from app.models.product import Product, ProductVariant
 from app.schemas.product import ProductCreate, VariantCreate
 
@@ -38,7 +40,11 @@ async def get_product_by_slug(db: AsyncSession, slug: str) -> Product | None:
 async def create_product(db: AsyncSession, data: ProductCreate) -> Product:
     product = Product(**data.model_dump())
     db.add(product)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=409, detail='A product with that slug already exists')
     await db.refresh(product)
     return product
 
@@ -46,6 +52,10 @@ async def create_product(db: AsyncSession, data: ProductCreate) -> Product:
 async def add_variant(db: AsyncSession, product_id: int, data: VariantCreate) -> ProductVariant:
     variant = ProductVariant(product_id=product_id, **data.model_dump())
     db.add(variant)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=409, detail='A variant with that combination already exists')
     await db.refresh(variant)
     return variant

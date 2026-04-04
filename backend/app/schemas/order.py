@@ -1,11 +1,11 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from app.models.order import OrderStatus
 
 
 class OrderItemIn(BaseModel):
     product_id: int
     variant_id: int | None = None
-    quantity:   int
+    quantity:   int = Field(ge=1, le=500)
 
 
 class OrderCreate(BaseModel):

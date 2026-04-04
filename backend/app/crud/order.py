@@ -5,6 +5,7 @@ from sqlalchemy.orm import selectinload
 from app.models.order import Order, OrderItem, OrderStatus
 from app.models.product import Product, ProductVariant
 from app.schemas.order import OrderCreate
+from app.core.config import settings
 
 
 def _generate_ref() -> str:
@@ -39,8 +40,12 @@ async def create_order(db: AsyncSession, data: OrderCreate) -> Order:
             unit_price=unit_price,
         ))
 
-    SHIPPING = 299  # £2.99 flat rate; swap for live carrier rates
-    total    = subtotal + SHIPPING
+    if subtotal >= settings.FREE_SHIPPING_THRESHOLD_PENCE:
+        shipping = 0
+    else:
+        shipping = settings.SHIPPING_FLAT_PENCE
+
+    total = subtotal + shipping
 
     order = Order(
         reference=_generate_ref(),
@@ -55,7 +60,7 @@ async def create_order(db: AsyncSession, data: OrderCreate) -> Order:
         country=data.country,
         notes=data.notes,
         subtotal=subtotal,
-        shipping=SHIPPING,
+        shipping=shipping,
         total=total,
         items=item_rows,
     )
@@ -74,9 +79,12 @@ async def get_order(db: AsyncSession, order_id: int) -> Order | None:
 
 async def mark_paid(db: AsyncSession, order_id: int, stripe_payment_id: str) -> Order | None:
     order = await get_order(db, order_id)
-    if order:
-        order.status = OrderStatus.paid
-        order.stripe_payment_id = stripe_payment_id
-        await db.commit()
-        await db.refresh(order)
+    if not order:
+        return None
+    if order.status == OrderStatus.paid:
+        return order
+    order.status = OrderStatus.paid
+    order.stripe_payment_id = stripe_payment_id
+    await db.commit()
+    await db.refresh(order)
     return order
