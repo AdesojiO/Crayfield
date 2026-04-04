@@ -5,6 +5,7 @@ from app.db.session import get_db
 from app.crud import order as crud
 from app.schemas.payment import PaymentIntentCreate, PaymentIntentOut
 from app.core.config import settings
+from app.core.limiter import limiter
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -12,7 +13,9 @@ router = APIRouter(prefix='/payments', tags=['payments'])
 
 
 @router.post('/create-intent', response_model=PaymentIntentOut)
+@limiter.limit('20/minute')
 async def create_payment_intent(
+    request: Request,
     data: PaymentIntentCreate,
     db: AsyncSession = Depends(get_db),
 ):

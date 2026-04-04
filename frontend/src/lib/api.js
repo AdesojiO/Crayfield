@@ -19,6 +19,9 @@ export const getFeaturedProducts = () =>
 export const createOrder = (payload) =>
   api.post('/orders', payload).then(r => r.data)
 
+export const getOrder = (orderId, token) =>
+  api.get(`/orders/${orderId}`, { params: { token } }).then(r => r.data)
+
 // ── Payments ──────────────────────────────────────────────
 export const createPaymentIntent = (payload) =>
   api.post('/payments/create-intent', payload).then(r => r.data)
