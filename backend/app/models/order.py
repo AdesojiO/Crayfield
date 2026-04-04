@@ -1,4 +1,5 @@
 import enum
+import uuid
 from datetime import datetime
 from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -19,6 +20,7 @@ class Order(Base):
 
     id:               Mapped[int]         = mapped_column(Integer, primary_key=True, index=True)
     reference:        Mapped[str]         = mapped_column(String(20), unique=True, nullable=False, index=True)
+    order_token:      Mapped[str]         = mapped_column(String(36), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     status:           Mapped[OrderStatus] = mapped_column(Enum(OrderStatus), default=OrderStatus.pending)
     stripe_payment_id: Mapped[str | None] = mapped_column(String(200))
 

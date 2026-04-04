@@ -33,7 +33,7 @@ export default function Cart() {
             const price    = variant?.price ?? product.price
             const imgSrc   = product.image_url || IMAGES.groundCrayfish
             return (
-              <li key={variantId} className="bg-white rounded-2xl p-4 shadow-card flex gap-4 items-center">
+              <li key={`${product.id}-${variantId ?? 'base'}`} className="bg-white rounded-2xl p-4 shadow-card flex gap-4 items-center">
                 <div className="w-20 h-20 rounded-xl overflow-hidden bg-brand-light shrink-0">
                   <img src={imgSrc} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
                 </div>
@@ -44,12 +44,12 @@ export default function Cart() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <div className="flex items-center border-2 border-neutral-border rounded-xl overflow-hidden text-sm">
-                    <button onClick={() => updateQuantity(variantId, quantity - 1)} className="w-9 h-9 font-bold text-gray-600 hover:bg-brand-light transition-colors">−</button>
+                    <button onClick={() => updateQuantity(product.id, variantId, quantity - 1)} className="w-9 h-9 font-bold text-gray-600 hover:bg-brand-light transition-colors">−</button>
                     <span className="w-8 text-center font-bold">{quantity}</span>
-                    <button onClick={() => updateQuantity(variantId, quantity + 1)} className="w-9 h-9 font-bold text-gray-600 hover:bg-brand-light transition-colors">+</button>
+                    <button onClick={() => updateQuantity(product.id, variantId, quantity + 1)} className="w-9 h-9 font-bold text-gray-600 hover:bg-brand-light transition-colors">+</button>
                   </div>
                   <button
-                    onClick={() => removeItem(variantId)}
+                    onClick={() => removeItem(product.id, variantId)}
                     aria-label={`Remove ${product.name}`}
                     className="w-9 h-9 flex items-center justify-center text-neutral-muted hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                   >

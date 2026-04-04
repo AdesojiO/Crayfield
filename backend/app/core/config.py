@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     SMTP_USER:     str = ''
     SMTP_PASSWORD: str = ''
     EMAIL_FROM:    str = 'Crayfield <hello@crayfield.co.uk>'
+    NOTIFY_EMAIL:  str = ''   # internal inbox for order/wholesale notifications
 
     FRONTEND_URL:  str = ''
 

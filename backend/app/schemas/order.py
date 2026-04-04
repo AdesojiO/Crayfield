@@ -32,8 +32,11 @@ class OrderItemOut(BaseModel):
 
 class OrderOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    id:        int
-    reference: str
-    status:    OrderStatus
-    total:     int
-    items:     list[OrderItemOut] = []
+    id:          int
+    reference:   str
+    order_token: str
+    status:      OrderStatus
+    subtotal:    int
+    shipping:    int
+    total:       int
+    items:       list[OrderItemOut] = []
