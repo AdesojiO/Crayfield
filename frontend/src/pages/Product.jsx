@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { ShoppingBag, ChevronLeft, ShieldCheck, Truck, PackageCheck, RotateCcw, Check } from 'lucide-react'
@@ -24,6 +24,12 @@ export default function Product() {
     queryKey: ['product', slug],
     queryFn: () => getProduct(slug),
   })
+
+  useEffect(() => {
+    if (product?.name) {
+      document.title = `${product.name} | Crayfield`
+    }
+  }, [product?.name])
 
   if (isLoading) return (
     <div className="page-container py-16 animate-pulse grid md:grid-cols-2 gap-12">
@@ -102,8 +108,15 @@ export default function Product() {
           </p>
 
           {product.description && (
-            <p className="text-neutral-muted leading-relaxed mb-6 text-sm">{product.description}</p>
+            <p className="text-neutral-muted leading-relaxed mb-4 text-sm">{product.description}</p>
           )}
+
+          {/* Allergen warning — always visible, never hidden in accordion */}
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6" role="alert">
+            <p className="text-amber-900 font-semibold text-sm">
+              Contains shellfish (crayfish). Not suitable for people with shellfish allergies.
+            </p>
+          </div>
 
           {/* Variant selector */}
           {product.variants?.length > 1 && (
@@ -161,7 +174,7 @@ export default function Product() {
           {/* Accordion */}
           <div className="divide-y divide-neutral-border">
             {[
-              { icon: ShieldCheck,  title: 'Allergen information',  content: 'Contains shellfish (crayfish). May contain traces of other shellfish. Store away from other allergens if cooking for others.' },
+              { icon: ShieldCheck,  title: 'Allergen detail',       content: 'Contains shellfish (crayfish). May contain traces of other shellfish. Store away from other allergens if cooking for others.' },
               { icon: PackageCheck, title: 'Storage guidance',      content: 'Keep in a cool, dry place away from direct sunlight and moisture. Once opened, store in an airtight container and use within 3 months.' },
               { icon: RotateCcw,    title: 'Delivery & returns',    content: 'UK-wide delivery via Royal Mail / DPD. Orders placed before 12pm ship same day (Mon–Fri). Returns accepted within 14 days for unopened items.' },
             ].map(({ icon: Icon, title, content }) => (

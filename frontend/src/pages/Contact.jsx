@@ -1,9 +1,15 @@
+import { useEffect } from 'react'
 import { MessageCircle, Mail, Building2, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const WA_URL = 'https://wa.me/447000000000?text=Hi%20Crayfield%2C%20I%20have%20a%20question.'
+const WA_NUMBER = import.meta.env.VITE_WA_NUMBER ?? '447000000000'
+const WA_URL = `https://wa.me/${WA_NUMBER}?text=Hi%20Crayfield%2C%20I%20have%20a%20question.`
 
 export default function Contact() {
+  useEffect(() => {
+    document.title = 'Contact | Crayfield'
+  }, [])
+
   return (
     <div className="page-container py-16 max-w-2xl">
       <p className="section-eyebrow">Get in touch</p>

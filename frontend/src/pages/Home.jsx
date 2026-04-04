@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Hero from '../components/home/Hero'
 import Bestsellers from '../components/home/Bestsellers'
 import WhyCrayfield from '../components/home/WhyCrayfield'
@@ -7,6 +8,10 @@ import WholesaleStrip from '../components/home/WholesaleStrip'
 import RecipeCards from '../components/home/RecipeCards'
 
 export default function Home() {
+  useEffect(() => {
+    document.title = 'Premium Nigerian Crayfish | Crayfield'
+  }, [])
+
   return (
     <>
       <Hero />

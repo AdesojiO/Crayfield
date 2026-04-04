@@ -1,10 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.crud import product as crud
 from app.schemas.product import ProductOut, ProductListOut, ProductCreate, VariantCreate, VariantOut
+from app.core.config import settings
 
 router = APIRouter(prefix='/products', tags=['products'])
+
+
+async def require_admin(x_admin_key: str = Header(default='')) -> None:
+    if not settings.ADMIN_API_KEY or x_admin_key != settings.ADMIN_API_KEY:
+        raise HTTPException(status_code=401, detail='Invalid or missing admin key')
 
 
 @router.get('', response_model=ProductListOut)
@@ -27,11 +33,11 @@ async def get_product(slug: str, db: AsyncSession = Depends(get_db)):
     return product
 
 
-@router.post('', response_model=ProductOut, status_code=201)
+@router.post('', response_model=ProductOut, status_code=201, dependencies=[Depends(require_admin)])
 async def create_product(data: ProductCreate, db: AsyncSession = Depends(get_db)):
     return await crud.create_product(db, data)
 
 
-@router.post('/{product_id}/variants', response_model=VariantOut, status_code=201)
+@router.post('/{product_id}/variants', response_model=VariantOut, status_code=201, dependencies=[Depends(require_admin)])
 async def add_variant(product_id: int, data: VariantCreate, db: AsyncSession = Depends(get_db)):
     return await crud.add_variant(db, product_id, data)

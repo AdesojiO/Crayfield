@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { submitWholesaleEnquiry } from '../lib/api'
 
 const BUSINESS_TYPES = ['African grocery shop', 'Restaurant / suya spot', 'Caterer / event company', 'Market trader', 'Cash & carry', 'Other']
@@ -6,6 +6,10 @@ const BUSINESS_TYPES = ['African grocery shop', 'Restaurant / suya spot', 'Cater
 export default function Wholesale() {
   const [form, setForm]   = useState({ business_name: '', business_type: '', postcode: '', monthly_spend: '', phone: '', email: '', message: '' })
   const [status, setStatus] = useState('idle')
+
+  useEffect(() => {
+    document.title = 'Wholesale | Crayfield'
+  }, [])
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
 
@@ -73,7 +77,7 @@ export default function Wholesale() {
 
           <div className="mt-8">
             <a
-              href="https://wa.me/447000000000?text=Hi%20Crayfield%2C%20I'd%20like%20to%20enquire%20about%20wholesale."
+              href={`https://wa.me/${import.meta.env.VITE_WA_NUMBER ?? '447000000000'}?text=Hi%20Crayfield%2C%20I'd%20like%20to%20enquire%20about%20wholesale.`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp inline-flex"

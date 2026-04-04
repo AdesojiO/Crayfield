@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ShoppingBag, SlidersHorizontal } from 'lucide-react'
 import { getProducts } from '../lib/api'
 import { useCartStore } from '../store/cartStore'
@@ -16,13 +16,26 @@ const CATEGORIES = [
 const FALLBACK_IMAGES = [IMAGES.groundCrayfish, IMAGES.wholeCrayfish, IMAGES.bulkCrayfish, IMAGES.spicesMarket]
 
 export default function Shop() {
-  const [category, setCategory] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const category = searchParams.get('category') ?? ''
   const addItem = useCartStore(s => s.addItem)
 
-  const { data, isLoading } = useQuery({
+  useEffect(() => {
+    document.title = 'Shop | Crayfield'
+  }, [])
+
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['products', category],
     queryFn: () => getProducts({ category: category || undefined }),
   })
+
+  const setCategory = (value) => {
+    if (value) {
+      setSearchParams({ category: value })
+    } else {
+      setSearchParams({})
+    }
+  }
 
   return (
     <div className="py-12">
@@ -57,7 +70,18 @@ export default function Shop() {
         </div>
 
         {/* Grid */}
-        {isLoading ? (
+        {isError ? (
+          <div className="text-center py-20">
+            <p className="text-gray-900 font-semibold mb-2">Unable to load products</p>
+            <p className="text-neutral-muted text-sm mb-6">Please check your connection and try again.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-outline text-sm"
+            >
+              Retry
+            </button>
+          </div>
+        ) : isLoading ? (
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <li key={i} className="bg-white rounded-2xl overflow-hidden shadow-card animate-pulse">
@@ -104,7 +128,7 @@ export default function Shop() {
                       <Link to={`/shop/${product.slug}`} className="btn-outline w-full text-sm">Choose options</Link>
                     ) : (
                       <button
-                        onClick={() => addItem(product, product.variants?.[0]?.id ?? product.id, 1)}
+                        onClick={() => addItem(product, product.variants?.[0]?.id ?? undefined, 1)}
                         disabled={!product.in_stock}
                         className="btn-primary w-full text-sm disabled:opacity-50"
                       >

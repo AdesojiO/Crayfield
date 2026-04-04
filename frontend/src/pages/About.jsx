@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, PackageCheck, ScanBarcode, Truck, ShoppingBag, Building2 } from 'lucide-react'
 import { IMAGES } from '../lib/images'
@@ -10,6 +11,10 @@ const QUALITY_POINTS = [
 ]
 
 export default function About() {
+  useEffect(() => {
+    document.title = 'About | Crayfield'
+  }, [])
+
   return (
     <div>
       {/* Hero */}
