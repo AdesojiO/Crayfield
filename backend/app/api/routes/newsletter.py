@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from app.db.session import get_db
 from app.models.newsletter import NewsletterSubscriber
+from app.core.limiter import limiter
 
 router = APIRouter(prefix='/newsletter', tags=['newsletter'])
 
@@ -14,7 +15,8 @@ class SubscribeIn(BaseModel):
 
 
 @router.post('/subscribe', status_code=201)
-async def subscribe(data: SubscribeIn, db: AsyncSession = Depends(get_db)):
+@limiter.limit('10/minute')
+async def subscribe(request: Request, data: SubscribeIn, db: AsyncSession = Depends(get_db)):
     subscriber = NewsletterSubscriber(email=data.email)
     db.add(subscriber)
     try:
