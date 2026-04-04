@@ -17,9 +17,9 @@ export const IMAGES = {
   // Local images: save files to src/assets/ with these exact names:
   //   egusi-soup.jpg  |  jollof-rice.jpg  |  ogbono-stew.jpg
   // then uncomment the imports at the top of this file and replace the strings below.
-  egusiSoup:  '/src/assets/egusi-soup.jpg',
-  jollofRice: '/src/assets/jollof-rice.jpg',
-  ogbonoStew: '/src/assets/ogbono-stew.jpg',
+  egusiSoup:  'https://picsum.photos/seed/egusi/800/600',
+  jollofRice: 'https://picsum.photos/seed/jollof/800/600',
+  ogbonoStew: 'https://picsum.photos/seed/ogbono/800/600',
 
   // ── Brand / About ─────────────────────────────────────────────────────────
   marketStall: 'https://picsum.photos/seed/market/1200/900',
@@ -28,8 +28,12 @@ export const IMAGES = {
 
 /** Helper: add width/height overrides to any image URL */
 export const imgUrl = (url, w, h) => {
-  const u = new URL(url)
-  u.searchParams.set('w', w)
-  if (h) u.searchParams.set('h', h)
-  return u.toString()
+  try {
+    const u = new URL(url)
+    u.searchParams.set('w', w)
+    if (h) u.searchParams.set('h', h)
+    return u.toString()
+  } catch {
+    return url
+  }
 }

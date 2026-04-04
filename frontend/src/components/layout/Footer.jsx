@@ -93,7 +93,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://wa.me/447000000000"
+                  href={`https://wa.me/${import.meta.env.VITE_WA_NUMBER ?? '447000000000'}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-[#25D366] hover:text-[#1ebe5d] transition-colors font-semibold"
@@ -111,7 +111,7 @@ export default function Footer() {
         <div className="pt-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs text-white/35">&copy; {new Date().getFullYear()} Crayfield Global Ltd. All rights reserved.</p>
-            <p className="text-xs text-white/25 mt-0.5">Company No. [XXXXXXXX] &middot; United Kingdom</p>
+            <p className="text-xs text-white/25 mt-0.5">Reg. No. [INSERT COMPANIES HOUSE NO.] &middot; United Kingdom</p>
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5">
             {POLICY_LINKS.map(({ to, label }) => (

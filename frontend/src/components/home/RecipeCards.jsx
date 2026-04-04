@@ -28,7 +28,7 @@ const RECIPES = [
   },
 ]
 
-const WA_NUMBER  = '447000000000'
+const WA_NUMBER  = import.meta.env.VITE_WA_NUMBER ?? '447000000000'
 const WA_MESSAGE = encodeURIComponent('Hi Crayfield, please add me to your WhatsApp updates list.')
 
 export default function RecipeCards() {

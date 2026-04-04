@@ -1,6 +1,6 @@
 import { MessageCircle } from 'lucide-react'
 
-const WA_NUMBER  = '447000000000'
+const WA_NUMBER  = import.meta.env.VITE_WA_NUMBER ?? '447000000000'
 const WA_MESSAGE = encodeURIComponent('Hi Crayfield, I have a question about my order.')
 
 export default function WhatsAppButton() {
